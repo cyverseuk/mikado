@@ -1,0 +1,119 @@
+{
+  "name": "MikadoCompare",
+  "shortDescription": "Identification of expressed loci from RNA-Seq data \n Tool to define the spec/sens of predictions vs. references.",
+  "version": "0.1.0",
+  "deploymentSystem": "cyverseUK-Storage2",
+  "deploymentPath": "/mnt/data/rosysnake/Mikado",
+  "executionSystem": "cyverseUK-Batch2",
+  "executionType": "CLI",
+  "parallelism": "SERIAL",
+  "templatePath": "compare_wrapper_batch.sh",
+  "testPath": "test.sh",
+  "tags": [  ],
+  "ontology": [  ],
+  "inputs": [
+    {"id": "reference",
+    "value": {
+      "required": true,
+      "visible": true,
+      "default": ""
+    },
+    "details": {
+      "label": "Genome FASTA file",
+      "description": "Reference annotation file. By def, an index will be crated and saved with the suffix .midx",
+      "showArgument": true,
+      "argument": "--reference "
+    }
+  },
+    {"id": "prediction",
+    "value": {
+      "required": false,
+      "visible": true
+      },
+    "details": {
+      "label": "Prediction annotation file",
+      "showArgument": false
+    }
+  }
+    ],
+
+
+  "parameters": [
+    {"id": "targets",
+    "value": {
+      "type": "enumeration",
+      "enumValues": [
+        "--prediction ",
+        "--self ",
+        "--internal "
+      ],
+      "visible": true,
+      "default": "--prediction "
+    },
+    "details": {
+      "label" : "targets",
+      "description": "Select --prediction if prediction file was provided. \n --self= Flag. If set, the reference will be compared with itself. Useful for understanding how the reference transcripts interact with each other. \n --internal= Flag. If set, for each gene with more than one transcript isoform each will be compared to the others. Useful for understanding the structural relationships between the transcripts in each gene. \n --index= Flag. If set, compare will stop after having generated the GFF index for the reference.",
+      "showArgument": false
+      }},
+    {"id": "distance",
+    "value": {
+      "type": "number",
+      "visible": true,
+      "validator": "^\\d*$",
+      "default": 2000
+      },
+    "details": {
+      "label": "distance",
+      "description": "Maximum distance for a transcript to be considered a polymerase run-on. Default: 2000",
+      "showArgument": true,
+      "argument": "--distance "
+      }},
+    {"id": "protein_coding",
+    "value": {
+      "type": "flag",
+      "visible": true
+    },
+    "details": {
+      "label": "protein coding",
+      "description": "Flag. If set, only transcripts with a CDS (both in reference and prediction) will be considered.",
+      "showArgument": true,
+      "argument": "--protein-coding "
+      }
+    },
+    {"id": "lenient",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "lenient",
+        "description": "If set, exonic statistics will be calculated leniently in the TMAP as well - ie they will consider an exon as match even if only the internal junction has been recovered.",
+        "showArgument": true,
+        "argument": "--lenient "
+      }
+    },
+    {"id": "exclude_utr",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "esclude utr",
+        "description": "Flag. If set, reference and prediction transcripts will be stripped of their UTRs (if they are coding).",
+        "showArgument": true,
+        "argument": "--exclude-utr "
+      }
+    },
+    {"id": "verbose",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "verbose",
+      "showArgument": true,
+      "argument": "--verbose "
+      }
+    }
+]
+}
