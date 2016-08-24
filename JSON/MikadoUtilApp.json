@@ -1,27 +1,16 @@
 {
   "name": "MikadoUtil",
   "shortDescription": "Identification of expressed loci from RNA-Seq data \n Collection of utilities for managing GTF/GFF files.",
-  "version": "0.0.0",
-  "deploymentSystem": "data.iplantcollaborative.org",
-  "deploymentPath": "rosysnake/Mikado",
-  "executionSystem": "cyverseUK-Batch",
+  "version": "0.1.0",
+  "deploymentSystem": "cyverseUK-Storage2",
+  "deploymentPath": "/mnt/data/rosysnake/Mikado",
+  "executionSystem": "cyverseUK-Batch2",
   "executionType": "CLI",
   "parallelism": "SERIAL",
-  "templatePath": "wrapper.sh",
+  "templatePath": "util_wrapper_batch.sh",
   "testPath": "test.sh",
   "tags": [  ],
-  "ontology": [ "http://edamontology.org/operation_0226",
-  "http://edamontology.org/operation_0362",
-  "http://edamontology.org/operation_3194",
-  "http://edamontology.org/operation_2499",
-  "http://edamontology.org/operation_0264",
-  "http://edamontology.org/operation_0335",
-  "http://edamontology.org/operation_3436",
-  "http://edamontology.org/operation_0434",
-  "http://edamontology.org/operation_0436",
-  "http://edamontology.org/operation_0433",
-  "http://edamontology.org/topic_3512",
-  "http://edamontology.org/topic_3320" ],
+  "ontology": [  ],
   "inputs": [
     {"id": "gtf",
     "value": {
@@ -54,7 +43,7 @@
       "required": false
       },
     "details": {
-      "label": "GREP: GFF file",
+      "label": "GREP/STATS: GFF file",
       "description": "The GFF file to parse."
       }
     },
@@ -64,8 +53,19 @@
       },
     "details": {
       "label": "MERGE_BLAST: xml"
-      }
+    },
+    "semantics": {
+      "maxCardinality": -1,
+      "minCardinality": 2
     }
+    },
+    {"id": "ann",
+    "value": {
+      "required": false
+      },
+    "details": {
+      "label": "TRIM: Reference GTF/GFF output file."
+      }}
     ],
 
 
@@ -148,15 +148,6 @@
       "argument": "--end "
       }
     },
-    {"id": "awk_out",
-    "value": {
-      "type": "string",
-      "visible": true
-      },
-    "details": {
-      "label": "AWK_GTF: output"
-      }
-    },
     {"id": "out_format",
     "value": {
       "type": "enumeration",
@@ -165,7 +156,7 @@
         "gtf",
         "gff3"
       ],
-      "required": true,
+      "required": false,
       "visible": true
       },
     "details": {
@@ -205,16 +196,6 @@
       "description": "Flag. If set, the program expects as ids only a list of genes, and will exclude/include all the transcripts children of the selected genes.",
       "showArgument": true,
       "argument": "--genes "
-      }
-    },
-    {"id": "grep_out",
-    "value": {
-      "type": "string",
-      "visible": true
-      },
-    "details": {
-      "label": "GREP: output",
-      "description": "Optional output file"
       }
     },
     {"id":"verbose",
