@@ -53,10 +53,6 @@
       },
     "details": {
       "label": "MERGE_BLAST: xml"
-    },
-    "semantics": {
-      "maxCardinality": -1,
-      "minCardinality": 2
     }
     },
     {"id": "ann",
@@ -163,15 +159,6 @@
       "label": "CONVERT: output format",
       "showArgument": true,
       "argument": "--out-format "
-      }
-    },
-    {"id": "conv_out",
-    "value": {
-      "type": "string",
-      "visible": true
-      },
-    "details": {
-      "label": "CONVERT: output"
       }
     },
     {"id": "grep_v",

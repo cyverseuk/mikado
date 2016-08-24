@@ -3,10 +3,10 @@
 rmthis=`ls`
 echo ${rmthis}
 
-ARGS="${pos_args} ${region} ${chromosome} ${as} ${start} ${end}"
+ARGS="${pos_arg} ${region} ${chromosome} ${as} ${start} ${end} ${gtf} ${gf} ${out_format} ${id_file} ${gff} ${ann} ${xml}"
 #echo $ARGS
 
-UTIL="${pos_args}"
+UTIL="${pos_arg}"
 CHR="${chromosome}"
 REG="${region}"
 GTF="${gtf}"
