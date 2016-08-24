@@ -1,0 +1,12 @@
+{
+  "name" : "MikadoUtil",
+  "appId" : "MikadoUtil-0.1.0",
+  "archive" : true,
+  "inputs": {
+    "gf": "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/stringtie.gtf"
+  },
+  "parameters" : {
+    "pos_arg": "convert ",
+    "out_format": "bed12"
+  }
+}
