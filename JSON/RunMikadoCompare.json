@@ -1,0 +1,11 @@
+{
+  "name" : "MikadoCompare",
+  "appId" : "MikadoCompare-0.1.0",
+  "archive" : true,
+  "inputs": {
+    "reference" :  "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/reference.gff3"
+  },
+  "parameters" : {
+    "targets": "--self "
+  }
+}
