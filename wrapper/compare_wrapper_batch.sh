@@ -18,7 +18,7 @@ if [  "${TARGETS}" == "--prediction " ]
     fi
 fi
 
-CMDLINEARG="mikado compare""${REF}"" --index; mikado compare ""${ARGS}"
+CMDLINEARG="mikado compare ""${REF}"" --index; mikado compare ""${ARGS}"
 echo ${CMDLINEARG};
 echo running docker now
 
