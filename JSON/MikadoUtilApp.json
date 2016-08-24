@@ -1,0 +1,267 @@
+{
+  "name": "MikadoUtil",
+  "shortDescription": "Identification of expressed loci from RNA-Seq data \n Collection of utilities for managing GTF/GFF files.",
+  "version": "0.0.0",
+  "deploymentSystem": "data.iplantcollaborative.org",
+  "deploymentPath": "rosysnake/Mikado",
+  "executionSystem": "cyverseUK-Batch",
+  "executionType": "CLI",
+  "parallelism": "SERIAL",
+  "templatePath": "wrapper.sh",
+  "testPath": "test.sh",
+  "tags": [  ],
+  "ontology": [ "http://edamontology.org/operation_0226",
+  "http://edamontology.org/operation_0362",
+  "http://edamontology.org/operation_3194",
+  "http://edamontology.org/operation_2499",
+  "http://edamontology.org/operation_0264",
+  "http://edamontology.org/operation_0335",
+  "http://edamontology.org/operation_3436",
+  "http://edamontology.org/operation_0434",
+  "http://edamontology.org/operation_0436",
+  "http://edamontology.org/operation_0433",
+  "http://edamontology.org/topic_3512",
+  "http://edamontology.org/topic_3320" ],
+  "inputs": [
+    {"id": "gtf",
+    "value": {
+      "required": false
+    },
+    "details": { "label": "AWK_GTF: gtf file"
+    },
+    "semantics": {
+      "maxCardinality": 1
+    }},
+    {"id": "gf",
+    "value": {
+      "required": false
+      },
+    "details": {
+      "label": "CONVERT: gtf file"
+    }
+  },
+    {"id": "id_file",
+    "value": {
+      "required": false
+      },
+    "details": {
+      "label": "GREP: id file",
+      "description": "ID file (format: mrna_id, gene_id - tab separated)"
+      }
+    },
+    {"id": "gff",
+    "value": {
+      "required": false
+      },
+    "details": {
+      "label": "GREP: GFF file",
+      "description": "The GFF file to parse."
+      }
+    },
+    {"id": "xml",
+    "value": {
+      "required": false
+      },
+    "details": {
+      "label": "MERGE_BLAST: xml"
+      }
+    }
+    ],
+
+
+  "parameters": [
+    {"id": "pos_arg",
+    "value": {
+      "type": "enumeration",
+      "enumValues": [
+        "awk_gtf ",
+        "convert ",
+        "grep ",
+        "stats ",
+        "trim ",
+        "merge_blast "
+      ],
+      "visible": true,
+      "required": true
+    },
+    "details": {
+      "label" : "utilities",
+      "description": "awk_gtf \t Script to retrieve specific feature slices from a GTF file. \n convert \t Script to do GTF <-> GFF3 > BED12 conversions. \n grep \t Script to extract specific models from GFF/GTF files. \n stats \t GFF/GTF statistics script. It will compute median/average length of RNAs, exons, CDS features, etc. \n trim \t Script to remove up to N bps from terminal exons in an annotation file. \n merge_blast \t Script to merge together multiple BLAST XML files. It also converts them on the fly if they are in ASN/compressed XML.",
+      "showArgument": false
+      }},
+    {"id": "region",
+    "value": {
+      "type": "string",
+      "visible": true,
+      "validator": "^\\w*:\\d*\\.{2}\\d*$"
+      },
+    "details": {
+      "label": "AWK_GTF: region",
+      "description": "Region defined as a string like <chrom>:<start>..<end>",
+      "showArgument": true,
+      "argument": "--region "
+      }},
+    {"id": "chromosome",
+    "value": {
+      "type": "string",
+      "visible": true
+    },
+    "details": {
+      "label": "AWK_GTF: chromosome",
+      "description": "May be set as an alternative to --region",
+      "showArgument": true,
+      "argument": "--chrom "
+      }
+    },
+    {"id": "as",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "AWK_GTF: Assume sorted",
+        "showArgument": true,
+        "argument": "--assume-sorted "
+      }
+    },
+    {"id": "start",
+      "value": {
+        "type": "number",
+        "visible": true,
+        "validator": "^\\d*$"
+      },
+      "details": {
+        "label": "AWK_GTF: start",
+        "showArgument": true,
+        "argument": "--start "
+      }
+    },
+    {"id": "end",
+    "value": {
+      "type": "number",
+      "visible": true,
+      "validator": "^\\d*$"
+      },
+    "details": {
+      "label": "AWK_GTF: end",
+      "showArgument": true,
+      "argument": "--end "
+      }
+    },
+    {"id": "awk_out",
+    "value": {
+      "type": "string",
+      "visible": true
+      },
+    "details": {
+      "label": "AWK_GTF: output"
+      }
+    },
+    {"id": "out_format",
+    "value": {
+      "type": "enumeration",
+      "enumValues": [
+        "bed12",
+        "gtf",
+        "gff3"
+      ],
+      "required": true,
+      "visible": true
+      },
+    "details": {
+      "label": "CONVERT: output format",
+      "showArgument": true,
+      "argument": "--out-format "
+      }
+    },
+    {"id": "conv_out",
+    "value": {
+      "type": "string",
+      "visible": true
+      },
+    "details": {
+      "label": "CONVERT: output"
+      }
+    },
+    {"id": "grep_v",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "GREP: v option",
+      "description": "Exclude from the gff all the records in the id file.",
+      "showArgument": true,
+      "argument": "-v "
+      }
+    },
+    {"id": "genes",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "GREP: genes",
+      "description": "Flag. If set, the program expects as ids only a list of genes, and will exclude/include all the transcripts children of the selected genes.",
+      "showArgument": true,
+      "argument": "--genes "
+      }
+    },
+    {"id": "grep_out",
+    "value": {
+      "type": "string",
+      "visible": true
+      },
+    "details": {
+      "label": "GREP: output",
+      "description": "Optional output file"
+      }
+    },
+    {"id":"verbose",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "MERGE_BLAST: verbose",
+      "showArgument": true,
+      "argument": "--verbose "
+      }
+    },
+    {"id": "only_coding",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "STATS: only coding",
+      "showArgument": true,
+      "argument": "--only-coding "
+      }
+    },
+    {"id":"max_len",
+      "value": {
+        "type": "number",
+        "visible": true,
+        "validator": "^\\d*$"
+      },
+      "details": {
+        "label": "TRIM: max length",
+        "description": "Maximal length of trimmed terminal exons",
+        "showArgument": true,
+        "argument": "--max_length "
+      }
+    },
+    {"id": "as_gtf",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "TRIM: as gtf",
+      "description": "Flag. If set, the output will be in GTF rather than GFF3 format.",
+      "showArgument": true,
+      "argument": "--as-gtf "
+      }}
+]
+}

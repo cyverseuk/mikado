@@ -1,0 +1,382 @@
+{
+  "name": "Mikado",
+  "shortDescription": "Identification of expressed loci from RNA-Seq data \n main pipeline",
+  "version": "0.0.0",
+  "deploymentSystem": "data.iplantcollaborative.org",
+  "deploymentPath": "rosysnake/Mikado",
+  "executionSystem": "cyverseUK-Batch",
+  "executionType": "CLI",
+  "parallelism": "SERIAL",
+  "templatePath": "wrapper.sh",
+  "testPath": "test.sh",
+  "tags": [  ],
+  "ontology": [ "http://edamontology.org/operation_0226",
+  "http://edamontology.org/operation_0362",
+  "http://edamontology.org/operation_3194",
+  "http://edamontology.org/operation_2499",
+  "http://edamontology.org/operation_0264",
+  "http://edamontology.org/operation_0335",
+  "http://edamontology.org/operation_3436",
+  "http://edamontology.org/operation_0434",
+  "http://edamontology.org/operation_0436",
+  "http://edamontology.org/operation_0433",
+  "http://edamontology.org/topic_3512",
+  "http://edamontology.org/topic_3320" ],
+  "inputs": [
+    {"id": "reference",
+    "value": {
+      "required": true
+    },
+    "details": { "label": "Genome FASTA file",
+      "showArgument": false
+    },
+    "semantics": {
+      "maxCardinality": 1
+    }},
+    {"id": "gff",
+    "value": {
+      "required": true
+      },
+    "details": { "label": "Input GFF/GTF file(s).",
+      "showArgument": false
+    }},
+      {
+        "id": "list",
+        "value":{
+          "required": false
+        },
+        "details":{
+          "label": "mutation file",
+          "description": "List of the inputs, one by line, in the form: \n <file1>  <label>  <strandedness (true/false)>",
+          "showArgument": false
+        },
+        "semantics": {
+          "maxCardinality": 1
+        }
+      },
+      {
+        "id": "scoring_file",
+        "value": {
+          "required": false,
+          "validator": "*\\.yaml$"
+        },
+        "details": {
+          "label": "scoring file [yaml extension]",
+          "showArgument": false
+        },
+        "semantics": {
+          "maxCardinality": 1
+        }
+      }
+    ],
+
+
+  "parameters": [
+    {"id": "con_full",
+    "value": {
+      "type": "flag",
+      "visible": true
+    },
+    "details": {
+      "label" : "full",
+      "showArgument": true,
+      "argument": "--full "
+      }},
+    {"id": "con_labels",
+    "value": {
+      "type": "string",
+      "visible": true,
+      "validator": "^\\S*$"
+      },
+    "details": {
+      "label": "label",
+      "description": "Labels to attach to the IDs of the transcripts of the input files, separated by comma.",
+      "showArgument": true,
+      "argument": "--labels "
+      }},
+    {"id": "con_gff",
+    "value": {
+      "type": "enumeration",
+      "enumValues": [
+        "--gff ",
+        "--list "
+      ],
+      "visible": true
+    },
+    "details": {
+      "label": "if given gff files and a list file or just the first ones",
+      "description": "--gff= Input GFF/GTF file(s), separated by comma \n --list= List of the inputs, one by line, in the form: \n <file1>  <label>  <strandedness (true/false)>",
+      "showArgument": false
+      }},
+    {"id": "con_mode",
+      "value": {
+        "type": "enumeration",
+        "enumValues": [ "nosplit",
+        "stringent",
+        "lenient",
+        "permissive",
+        "split"],
+        "visible": true
+      },
+      "details": {
+        "label": "configure mode",
+        "description": "Mode in which Mikado will treat transcripts with multiple ORFs. \n - nosplit: keep the transcripts whole. \n - stringent: split multi-orf transcripts if two consecutive ORFs have both BLAST hits and none of those hits is against the same target. \n - lenient: split multi-orf transcripts as in stringent, and additionally, also when either of the ORFs lacks a BLAST hit (but not both). \n - permissive: like lenient, but also split when both ORFs lack BLAST hits \n - split: split multi-orf transcripts regardless of what BLAST data is available.",
+        "showArgument": true,
+        "argument": "--mode "
+      }
+    },
+    {"id": "con_scoring",
+      "value": {
+        "type": "string",
+        "visible": true
+      },
+      "details": {
+        "label": "scoring file",
+        "description": "If no file was uploaded by the user {plants.yaml,human.yaml,insects.yaml,worm.yaml} are the available scoring files",
+        "showArgument": true,
+        "argument": "--scoring "
+      }
+    },
+    {"id": "con_strand_spec",
+    "value": {
+      "type": "string",
+      "visible": true
+      },
+    "details": {
+      "label": "strand specific assemblies",
+      "description": "List of strand-specific assemblies among the inputs.",
+      "showArgument": true,
+      "argument": "--strand-specific-assemblies "
+      },
+      "semantics": {
+        "maxCardinality": 1
+      }
+    },
+    {"id": "prep_verb",
+    "value": {
+      "type": "enumeration",
+      "enumValues": [
+        "--verbose ",
+        "--quiet "
+      ],
+      "visible": true
+      },
+    "details": {
+      "label": "verbosity level",
+      "showArgument": false
+      }
+    },
+    {"id": "prep_strand_spec",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "strand specific",
+      "description": "Flag. If set, monoexonic transcripts will be left on their strand rather than being moved to the unknown strand.",
+      "showArgument": true,
+      "argument": "-strand-specific "
+      }
+    },
+    {"id": "prep_lenient",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "lenient",
+      "description": "Flag. If set, transcripts with only non-canonical splices will be output as well.",
+      "showArgument": true,
+      "argument": "--lenient "
+      }
+    },
+    {"id": "prep_min_len",
+    "value": {
+      "type": "number",
+      "visible": true,
+      "validator": "^\\d*$",
+      "default": 200
+      },
+    "details": {
+      "label": "minimum transcript length",
+      "description": "Minimum length for transcripts. Default: 200 bps.",
+      "showArgument": true,
+      "argument": "--minimum_length "
+      }
+    },
+    {"id": "prep_scds",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "strip cds",
+      "description": "Boolean flag. If set, ignores any CDS/UTR segment.",
+      "showArgument": true,
+      "argument": "--strip_cds "
+      }
+    },
+    {"id": "ser_max_reg",
+    "value": {
+      "type": "number",
+      "visible": true
+      },
+    "details": {
+      "label": "max regression",
+      "description": "Amount of sequence in the ORF (in %) to backtrack in order to find a valid START codon, if one is absent.",
+      "showArgument": true,
+      "argument": "--max-regression "
+      }
+    },
+    {"id":"ser_max_tseq",
+    "value": {
+      "type":"number",
+      "visible": true,
+      "validator": "^\\d*$"
+      },
+    "details": {
+      "label": "max target sequences",
+      "description": "Maximum number of target sequences.",
+      "showArgument": true,
+      "argument": "--max_target_seqs "
+      }
+    },
+    {"id":"ser_discard",
+    "value":{
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "discard definition",
+      "description": "Flag. If set, the sequences IDs instead of their definition will be used for serialisation.",
+      "showArgument": true,
+      "argument": "--discard-definition "
+      }
+    },
+    {"id": "ser_log_lev",
+    "value": {
+      "type": "enumeration",
+      "visible": true,
+      "enumValues": [
+        "DEBUG",
+        "INFO",
+        "WARN",
+        "ERROR"
+      ],
+      "default": "INFO"
+      },
+    "details": {
+      "label": "log level of serialise step",
+      "description": "Log level. Default: INFO",
+      "showArgument": true,
+      "argument": "--log_level"
+      }
+    },
+    {"id": "pick_subout",
+    "value": {
+      "type": "string",
+      "visible": true
+      },
+    "details": {
+      "label": "subloci output",
+      "showArgument": true,
+      "argument": "--subloci_out"
+      }
+    },
+    {"id": "pick_monout",
+    "value": {
+      "type": "string",
+      "visible": true
+      },
+    "details": {
+      "label": "monoloci output",
+      "showArgument": true,
+      "argument": "--monoloci_out "
+      }
+    },
+    {"id": "pick_prefix",
+    "value": {
+      "type": "string",
+      "visible": true,
+      "default": "Mikado"
+      },
+    "details": {
+      "label": "prefix",
+      "description": "Prefix for the genes. Default: Mikado",
+      "showArgument": true,
+      "argument": "--prefix "
+      }
+    },
+    {"id": "pick_no_cds",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "no cds",
+      "description": "Flag. If set, not CDS information will be printed out in the GFF output files.",
+      "showArgument": true,
+      "argument": "--no_cds "
+      }
+    },
+    {"id": "pick_flank",
+    "value": {
+      "type": "number",
+      "visible": true,
+      "validator": "^\\d*$"
+      },
+    "details": {
+      "label": "flanking distance",
+      "description": "Flanking distance (in bps) to group non-overlapping transcripts into a single superlocus.",
+      "showArgument": true,
+      "argument": "--flank "
+      }
+    },
+    {"id": "pick_purge",
+    "value": {
+      "type": "flag",
+      "visible": true
+      },
+    "details": {
+      "label": "purge",
+      "description": " Flag. If set, the pipeline will suppress any loci whose transcripts do not pass the requirements set in the JSON file.",
+      "showArgument": true,
+      "argument": "--purge "
+      }
+    },
+    {"id": "pick_verbosity",
+    "value": {
+      "type": "enumeration",
+      "enumValues": [
+        "--verbose ",
+        "--noverbose "
+      ],
+      "visible": true
+      },
+    "details": {
+      "label": "verbosity of pick step",
+      "description": "if --verbose is set the DEBUG mode will be activated",
+      "showArgument": false
+      }
+    },
+    {"id": "pick_log_lev",
+    "value": {
+      "type": "enumeration",
+      "enumValues": [
+        "DEBUG",
+        "INFO",
+        "WARN",
+        "ERROR",
+        "CRITICAL"
+      ],
+      "visible": true
+      },
+    "details": {
+      "label": "log level of pick step",
+      "description": "Log level",
+      "showArgument": true,
+      "argument": "--log-level "
+      }
+    }
+]
+}
