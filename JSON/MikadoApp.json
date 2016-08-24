@@ -1,27 +1,16 @@
 {
   "name": "Mikado",
   "shortDescription": "Identification of expressed loci from RNA-Seq data \n main pipeline",
-  "version": "0.0.0",
-  "deploymentSystem": "data.iplantcollaborative.org",
-  "deploymentPath": "rosysnake/Mikado",
-  "executionSystem": "cyverseUK-Batch",
+  "version": "0.1.0",
+  "deploymentSystem": "cyverseUK-Storage2",
+  "deploymentPath": "/mnt/data/rosysnake/Mikado",
+  "executionSystem": "cyverseUK-Batch2",
   "executionType": "CLI",
   "parallelism": "SERIAL",
-  "templatePath": "wrapper.sh",
+  "templatePath": "wrapper_batch.sh",
   "testPath": "test.sh",
   "tags": [  ],
-  "ontology": [ "http://edamontology.org/operation_0226",
-  "http://edamontology.org/operation_0362",
-  "http://edamontology.org/operation_3194",
-  "http://edamontology.org/operation_2499",
-  "http://edamontology.org/operation_0264",
-  "http://edamontology.org/operation_0335",
-  "http://edamontology.org/operation_3436",
-  "http://edamontology.org/operation_0434",
-  "http://edamontology.org/operation_0436",
-  "http://edamontology.org/operation_0433",
-  "http://edamontology.org/topic_3512",
-  "http://edamontology.org/topic_3320" ],
+  "ontology": [ ],
   "inputs": [
     {"id": "reference",
     "value": {
@@ -39,7 +28,10 @@
       },
     "details": { "label": "Input GFF/GTF file(s).",
       "showArgument": false
-    }},
+    },
+    "semantics": {
+      "maxCardinality": -1
+      }},
       {
         "id": "list",
         "value":{
@@ -67,6 +59,34 @@
         "semantics": {
           "maxCardinality": 1
         }
+      },
+      {
+        "id": "junction_file",
+        "value": {
+          "required": false,
+        },
+        "details": {
+          "label": ".bed file with splicing junctions",
+          "showArgument": false
+        }
+      },
+      {
+        "id": "bt_file",
+        "value": {
+          "required": false
+        },
+        "details": {
+          "label": "blast databasefor deriving homology informations"
+        }
+      },
+      {
+        "id": "orfs",
+        "value": {
+          "required": true
+        },
+        "details":{
+          "label": "ORF BED file(s)"
+          }
       }
     ],
 
@@ -94,20 +114,6 @@
       "showArgument": true,
       "argument": "--labels "
       }},
-    {"id": "con_gff",
-    "value": {
-      "type": "enumeration",
-      "enumValues": [
-        "--gff ",
-        "--list "
-      ],
-      "visible": true
-    },
-    "details": {
-      "label": "if given gff files and a list file or just the first ones",
-      "description": "--gff= Input GFF/GTF file(s), separated by comma \n --list= List of the inputs, one by line, in the form: \n <file1>  <label>  <strandedness (true/false)>",
-      "showArgument": false
-      }},
     {"id": "con_mode",
       "value": {
         "type": "enumeration",
@@ -116,7 +122,8 @@
         "lenient",
         "permissive",
         "split"],
-        "visible": true
+        "visible": true,
+        "default": "permissive"
       },
       "details": {
         "label": "configure mode",
@@ -137,6 +144,18 @@
         "argument": "--scoring "
       }
     },
+    {"id": "all_strand_spec",
+    "value": {
+      "type": "flag",
+      "visible": true
+    },
+    "details": {
+      "label": "strand specific",
+      "description": "Boolean flag indicating whether all the assemblies are strand-specific.",
+      "showArgument": true,
+      "argument": "--strand-specific "
+    }
+    },
     {"id": "con_strand_spec",
     "value": {
       "type": "string",
@@ -150,70 +169,6 @@
       },
       "semantics": {
         "maxCardinality": 1
-      }
-    },
-    {"id": "prep_verb",
-    "value": {
-      "type": "enumeration",
-      "enumValues": [
-        "--verbose ",
-        "--quiet "
-      ],
-      "visible": true
-      },
-    "details": {
-      "label": "verbosity level",
-      "showArgument": false
-      }
-    },
-    {"id": "prep_strand_spec",
-    "value": {
-      "type": "flag",
-      "visible": true
-      },
-    "details": {
-      "label": "strand specific",
-      "description": "Flag. If set, monoexonic transcripts will be left on their strand rather than being moved to the unknown strand.",
-      "showArgument": true,
-      "argument": "-strand-specific "
-      }
-    },
-    {"id": "prep_lenient",
-    "value": {
-      "type": "flag",
-      "visible": true
-      },
-    "details": {
-      "label": "lenient",
-      "description": "Flag. If set, transcripts with only non-canonical splices will be output as well.",
-      "showArgument": true,
-      "argument": "--lenient "
-      }
-    },
-    {"id": "prep_min_len",
-    "value": {
-      "type": "number",
-      "visible": true,
-      "validator": "^\\d*$",
-      "default": 200
-      },
-    "details": {
-      "label": "minimum transcript length",
-      "description": "Minimum length for transcripts. Default: 200 bps.",
-      "showArgument": true,
-      "argument": "--minimum_length "
-      }
-    },
-    {"id": "prep_scds",
-    "value": {
-      "type": "flag",
-      "visible": true
-      },
-    "details": {
-      "label": "strip cds",
-      "description": "Boolean flag. If set, ignores any CDS/UTR segment.",
-      "showArgument": true,
-      "argument": "--strip_cds "
       }
     },
     {"id": "ser_max_reg",
