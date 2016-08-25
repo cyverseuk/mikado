@@ -3,13 +3,15 @@
 rmthis=`ls`
 echo ${rmthis}
 
-ARGS=" ${reference} ${gff} ${list} ${scoring_file} ${junction_file} ${bt_file} ${con_full} ${con_labels} ${con_mode} ${con_scoring} ${all_strand_spec} ${con_strand_spec} ${ser_max_reg} ${ser_max_tseq} ${ser_discard} ${ser_log_lev} ${pick_subout} ${pick_monout} ${pick_prefix} ${pick_no_cds} ${pick_flank} ${pick_purge} ${pick_verbosity} ${pick_log_lev}"
+ARGS=" ${reference} ${gff} ${list} ${scoring_file} ${junction_file} ${bt_file} ${con_full} ${con_labels} ${con_mode} ${con_scoring} ${all_strand_spec} ${con_strand_spec} ${ser_max_reg} ${ser_max_tseq} ${ser_discard} ${ser_log_lev} ${pick_monout} ${pick_prefix} ${pick_no_cds} ${pick_flank} ${pick_purge} ${pick_verbosity} ${pick_log_lev}"
 #echo $ARGS
 GFF=(${gff})
 GFFcomma=`for el in ${GFF}; do echo ${el}", ";done`
 LIST="${list}"
 JUNC="${junction_file}"
 BT="${bt_file}"
+ORFS="${orfs}"
+MONOUT="${pick_monout}"
 
 CMDLINEARG=
 
@@ -40,12 +42,20 @@ echo "${CMDLINEARG}"
 if [ -n "${BT}" ]
 then
   CMDLINEARG+="makeblastdb -in ${BT} -dbtype prot -parse_seqids > blast_prepare.log; "
-  CMDLINEARG+="blastx -max_target_seqs 5 -query mikado_prepared.fasta -outfmt 5 -db ${BT} -evalue 0.000001 2> blast.log | sed '/^$/d' | gzip -c - > mikado.blast.xml.gz; "
+  CMDLINEARG+="blastx -max_target_seqs ${max_target_seqs} -query mikado_prepared.fasta -outfmt 5 -db ${BT} -evalue 0.000001 2> blast.log | sed '/^$/d' | gzip -c - > mikado.blast.xml.gz; "
 fi
 echo "${CMDLINEARG}"
 
 ###########serialise step
 CMDLINEARG+="mikado serialise --json-conf configuration.yaml --xml mikado.blast.xml.gz "
+if [ -n "$ORFS" ]
+  then
+    CMDLINEARG+="--orfs ${ORFS}"
+fi
+CMDLINEARG+="${ser_log_lev} ${ser_discard} ${ser_max_reg} ${ser_log_lev} --blast_targets; "
+
+##############pick step
+CMDLINEARG+="mikado pick --json-conf configuration.yaml --subloci_out mikado.subloci.gff3 ${pick_monout} ${pick_prefix} ${pick_no_cds} ${pick_flank} ${pick_purge} ${pick_verbosity} ${pick_log_lev};"
 
 echo ${CMDLINEARG};
 echo running docker now
