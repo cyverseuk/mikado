@@ -1,0 +1,17 @@
+{
+  "name" : "Mikado",
+  "appId" : "Mikado-0.1.0",
+  "archive" : true,
+  "inputs": {
+    "reference" :  "https://github.com/lucventurini/mikado/raw/master/Mikado/test/chr5.fas.gz",
+    "list": "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/list.txt",
+    "junction_file": "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/junctions.bed",
+    "bt_file": "https://github.com/lucventurini/mikado/raw/master/sample_data/uniprot_sprot_plants.fasta.gz",
+    "gff": [ "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/class.gtf", "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/cufflinks.gtf", "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/stringtie.gtf", "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/trinity.gff3"],
+    "orfs": "https://raw.githubusercontent.com/lucventurini/mikado/master/sample_data/mikado.bed"
+
+  },
+  "parameters" : {
+    "con_scoring": "plants.yaml "
+  }
+}
