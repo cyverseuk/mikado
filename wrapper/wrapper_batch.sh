@@ -12,8 +12,18 @@ JUNC="${junction_file}"
 BT="${bt_file}"
 ORFS="${orfs}"
 MONOUT="${pick_monout}"
+REF="${reference}"
 
 CMDLINEARG=
+
+#########
+if [[ "${REF}" =~ \.gz$ ]]
+  then
+    CMDLINEARG+="gunzip -c ${REF} > ${REF::-3} ; "
+fi
+CMDLINEARG+="gunzip -c ${BT} > ${BT::-3} ; "
+REF=`echo ${REF} | sed -e  's/\.gz/ /'`
+BT=`echo ${BT} | sed -e 's/\.gz/ /'`
 
 ##########configure step
 CMDLINEARG+="mikado configure "
@@ -31,7 +41,7 @@ if [ -n "${BT}" ]
   then
     CMDLINEARG+="-bt ${BT} "
 fi
-CMDLINEARG+="${con_full} ${labels} ${all_strand_spec} ${con_strand_spec} ${con_mode} ${con_scoring} --reference ${reference} configuration.yaml; "
+CMDLINEARG+="${con_full} ${labels} ${all_strand_spec} ${con_strand_spec} ${con_mode} ${con_scoring} --reference ${REF} configuration.yaml; "
 echo "${CMDLINEARG}"
 
 #########prepare step
@@ -42,7 +52,12 @@ echo "${CMDLINEARG}"
 if [ -n "${BT}" ]
 then
   CMDLINEARG+="makeblastdb -in ${BT} -dbtype prot -parse_seqids > blast_prepare.log; "
-  CMDLINEARG+="blastx -max_target_seqs ${max_target_seqs} -query mikado_prepared.fasta -outfmt 5 -db ${BT} -evalue 0.000001 2> blast.log | sed '/^$/d' | gzip -c - > mikado.blast.xml.gz; "
+  CMDLINEARG+="blastx "
+  if [ -n "${max_target_seqs}" ]
+    then
+    CMDLINEARG+="-max_target_seqs ${max_target_seqs}"
+  fi
+  CMDLINEARG+=" -query mikado_prepared.fasta -outfmt 5 -db ${BT} -evalue 0.000001 2> blast.log | sed '/^$/d' | gzip -c - > mikado.blast.xml.gz; "
 fi
 echo "${CMDLINEARG}"
 
@@ -52,7 +67,12 @@ if [ -n "$ORFS" ]
   then
     CMDLINEARG+="--orfs ${ORFS}"
 fi
-CMDLINEARG+="${ser_log_lev} ${ser_discard} ${ser_max_reg} ${ser_log_lev} --blast_targets; "
+CMDLINEARG+="${ser_log_lev} ${ser_discard} ${ser_max_reg} ${ser_log_lev} "
+if [ -n "${BT}" ]
+  then
+    CMDLINEARG+="--blast_targets ${BT}"
+fi
+CMDLINEARG+="; "
 
 ##############pick step
 CMDLINEARG+="mikado pick --json-conf configuration.yaml --subloci_out mikado.subloci.gff3 ${pick_monout} ${pick_prefix} ${pick_no_cds} ${pick_flank} ${pick_purge} ${pick_verbosity} ${pick_log_lev};"
@@ -67,3 +87,4 @@ rmthis=`echo ${rmthis} | sed s/.*\.err// -`
 rm --verbose ${rmthis}
 
 exit 0
+
