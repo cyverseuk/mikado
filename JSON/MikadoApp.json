@@ -41,7 +41,7 @@
         },
         "details":{
           "label": "mutation file",
-          "description": "List of the inputs, one by line, in the form: \n <file1>  <label>  <strandedness (true/false)>",
+          "description": "List of the inputs, one by line, in the form: \n file1  label  strandedness(true/false)",
           "showArgument": false
         },
         "semantics": {
@@ -171,13 +171,14 @@
       "argument": "--strand-specific-assemblies "
       },
       "semantics": {
-        "maxCardinality": 1
+        "Cardinality": 1
       }
     },
     {"id": "ser_max_reg",
     "value": {
-      "type": "number",
-      "visible": true
+      "type": "string",
+      "visible": true,
+      "validator": "^\\d*$"
       },
     "details": {
       "label": "max regression",
@@ -228,7 +229,7 @@
       "label": "log level of serialise step",
       "description": "Log level. Default: INFO",
       "showArgument": true,
-      "argument": "--log_level"
+      "argument": "--log_level "
       }
     },
     {"id": "pick_monout",
@@ -269,7 +270,7 @@
     },
     {"id": "pick_flank",
     "value": {
-      "type": "number",
+      "type": "string",
       "visible": true,
       "validator": "^\\d*$"
       },
