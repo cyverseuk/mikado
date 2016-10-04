@@ -44,4 +44,3 @@ jobid=`echo $jobid | sed -e 's/\.//'`
 condor_tail -f $jobid
 
 exit 0
-
