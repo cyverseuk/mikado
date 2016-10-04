@@ -1,8 +1,6 @@
 #!/bin/bash
 
 ARGS="${pos_arg} ${region} ${chromosome} ${as} ${start} ${end} ${gtf} ${gf} ${out_format} ${id_file} ${gff} ${ann} ${xml}"
-#echo $ARGS
-INPUTS="${gtf}, ${gf}, ${id_file}, ${gff}, ${xml}, ${ann}"
 
 UTIL="${pos_arg}"
 CHR="${chromosome}"
@@ -96,15 +94,19 @@ if [ "${UTIL}" == "merge_blast " ]
     CMDLINEARG="mikado util ""${UTIL} ${verbose} --log merge_blast.log --out merge_blast.out ${XML}"
 fi
 
-echo ${CMDLINEARG};
+echo arguments are "${CMDLINEARG}"
+INPUTS="${gtf}, ${gf}, ${id_file}, ${gff}, ${xml}, ${ann}"
+echo input files are "${INPUTS}"
+
+chmod +x launch.sh
 
 echo  universe                = docker >> lib/condorSubmitEdit.htc
-echo docker_image            =  cyverseuk/kallisto:v0.43.0 >> lib/condorSubmitEdit.htc ######
+echo docker_image            =  cyverseuk/mikado:v1.0 >> lib/condorSubmitEdit.htc ######
 echo executable               =  ./launch.sh >> lib/condorSubmitEdit.htc #####
-echo arguments				= ${CMDLINEARG} >> lib/condorSubmitEdit.htc
-echo transfer_input_files = ${INPUTS} launch.sh >> lib/condorSubmitEdit.htc
-#echo transfer_output_files = output >> lib/condorSubmitEdit.htc
-cat lib/condorSubmit.htc >> lib/condorSubmitEdit.htc
+echo arguments                          = ${CMDLINEARG} >> lib/condorSubmitEdit.htc
+echo transfer_input_files = ${INPUTS}, launch.sh >> lib/condorSubmitEdit.htc
+echo transfer_output_files = output >> lib/condorSubmitEdit.htc
+cat /mnt/data/rosysnake/lib/condorSubmit.htc >> lib/condorSubmitEdit.htc
 
 less lib/condorSubmitEdit.htc
 
