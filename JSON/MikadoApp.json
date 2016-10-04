@@ -1,16 +1,25 @@
 {
   "name": "Mikado",
   "shortDescription": "Identification of expressed loci from RNA-Seq data \n main pipeline",
+  "longDescription": "Identification of expressed loci from RNA-Seq data \n main pipeline",
+  "helpURI": "http://mikado.readthedocs.io/en/latest/",
+  "datePublished": "",
+  "author": "Alice Minotto",
   "version": "0.1.0",
   "deploymentSystem": "cyverseUK-Storage2",
   "deploymentPath": "/mnt/data/rosysnake/Mikado",
   "executionSystem": "cyverseUK-Batch2",
   "executionType": "CLI",
   "parallelism": "SERIAL",
-  "templatePath": "wrapper_batch.sh",
+  "templatePath": "wrapper.sh",
   "testPath": "test.sh",
   "tags": [  ],
-  "ontology": [ ],
+  "ontology": [ "http://edamontology.org/operation_0362",
+  "http://edamontology.org/operation_0264",
+  "http://edamontology.org/operation_0436",
+  "http://edamontology.org/operation_0433",
+  "http://edamontology.org/topic_3512",
+  "http://edamontology.org/topic_3320" ],
   "inputs": [
     {"id": "reference",
     "value": {
@@ -89,7 +98,11 @@
         },
         "details":{
           "label": "ORF BED file(s)"
-          }
+        },
+        "semantics": {
+          "maxCardinality": -1
+
+        }
       }
     ],
 
