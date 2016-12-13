@@ -18,17 +18,17 @@ if [ "${UTILU}" == "awk_gtf " ]
   then
     if [ -z "${GTFU}" ]
       then
-        echo "gtf file is required for awk_gtf utility"
+        >&2 echo "gtf file is required for awk_gtf utility"
         exit 1;
     fi
     if [ -z "${CHRU}" ] && [ -z "${REGU}" ]
       then
-        echo "one of the two options --chrom or --region is required for awk_gtf utility"
+        >&2 echo "one of the two options --chrom or --region is required for awk_gtf utility"
         exit 1;
     fi
     if [  -n "${CHRU}" ] && [ -n "${REGU}" ]
       then
-          echo "--chrom and --region are mutually exclusive options"
+          >&2 echo "--chrom and --region are mutually exclusive options"
           exit 1;
     fi
     CMDLINEARG="mikado util ""${UTILU} ${REGU} ${CHRU} ${as} ${start} ${end} ${GTFU} awk_gtf.out"
@@ -39,12 +39,12 @@ if [ "${UTILU}" == "convert " ]
   then
     if [ -z "${GFU}" ]
       then
-        echo "input file is required for convert utility"
+        >&2 echo "input file is required for convert utility"
         exit 1;
     fi
     if [ -z "${OUTFORU}" ]
       then
-        echo "choose output format for the conversion"
+        >&2 echo "choose output format for the conversion"
         exit 1;
     fi
     CMDLINEARG="mikado util ""${UTILU} ${OUTFORU} ${GFU} convert.out"
@@ -55,7 +55,7 @@ if [ "${UTILU}" == "grep " ]
   then
     if [ -z "${ID_FILEU}" ] || [ -z "${GFFU}" ]
       then
-        echo "id file and gff are required for grep utility"
+        >&2 echo "id file and gff are required for grep utility"
         exit 1;
     fi
     CMDLINEARG="mikado util ""${UTILU} ${grep_v} ${genes} ${ID_FILEU} ${GFFU} grep.out"
@@ -66,7 +66,7 @@ if [ "${UTILU}" == "stats " ]
   then
     if [ -z "${GFFU}" ]
       then
-        echo "gff file is required for stats utility"
+        >&2 echo "gff file is required for stats utility"
         exit 1;
     fi
     CMDLINEARG="mikado util ""${UTILU} ${only_coding} ${GFFU} stats.out"
@@ -77,7 +77,7 @@ if [ "${UTILU}" == "trim " ]
   then
     if [ -z "${ANNU}" ]
       then
-        echo "annotation file is required for trim utility"
+        >&2 echo "annotation file is required for trim utility"
         exit 1;
     fi
     CMDLINEARG="mikado util ""${UTILU} ${max_len} ${as_gtf} ${ANNU} trim.out"
@@ -88,7 +88,7 @@ if [ "${UTILU}" == "merge_blast " ]
   then
     if [ -z "${XMLU}" ]
       then
-        echo "xml files are required for merge_blast utility"
+        >&2 echo "xml files are required for merge_blast utility"
         exit 1;
     fi
     CMDLINEARG="mikado util ""${UTILU} ${verbose} --log merge_blast.log --out merge_blast.out ${XMLU}"
