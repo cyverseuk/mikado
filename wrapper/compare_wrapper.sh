@@ -10,7 +10,7 @@ if [  "${TARGETSU}" == "--prediction " ]
   then
     if [ -z "${prediction}" ]
       then
-        echo "prediction file is needed for --prediction option"
+        >&2 echo "prediction file is needed for --prediction option"
         exit 1;
     fi
 fi
