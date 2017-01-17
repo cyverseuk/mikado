@@ -1,5 +1,20 @@
 #!/bin/bash
 
+function debug {
+  echo "creating debugging directory"
+mkdir .debug
+for word in ${rmthis}
+  do
+    if [[ "${word}" == *.sh ]] || [[ "${word}" == lib ]]
+      then
+        mv "${word}" .debug;
+      fi
+  done
+}
+
+rmthis=`ls`
+echo ${rmthis}
+
 ARGS=" ${reference} ${gff} ${list} ${scoring_file} ${junction_file} ${bt_file} ${con_full} ${con_labels} ${con_mode} ${con_scoring} ${all_strand_spec} ${con_strand_spec} ${ser_max_reg} ${ser_max_tseq} ${ser_discard} ${ser_log_lev} ${pick_monout} ${pick_prefix} ${pick_no_cds} ${pick_flank} ${pick_purge} ${pick_verbosity} ${pick_log_lev}"
 #echo $ARGS
 GFFU=(${gff})
@@ -19,7 +34,10 @@ if [[ "${REFU}" =~ \.gz$ ]]
   then
     CMDLINEARG+="gunzip -c ${REFU} > ${REFU::-3} ; "
 fi
-CMDLINEARG+="gunzip -c ${BTU} > ${BTU::-3} ; "
+if [[ "${BTU}" =~ \.gz$ ]]
+  then
+    CMDLINEARG+="gunzip -c ${BTU} > ${BTU::-3} ; "
+fi
 REFU=`echo ${REFU} | sed -e  's/\.gz/ /'`
 BTU=`echo ${BTU} | sed -e 's/\.gz/ /'`
 
@@ -82,7 +100,7 @@ INPUTSU="${reference}, ${GFFcomma}, ${list}, ${scoring_file}, ${junction_file}, 
 chmod +x launch.sh
 
 echo  universe                = docker >> lib/condorSubmitEdit.htc
-echo docker_image            =  cyverseuk/mikado:v1.0 >> lib/condorSubmitEdit.htc ######
+echo docker_image            =  cyverseuk/mikado:v1.0.1 >> lib/condorSubmitEdit.htc ######
 echo executable               =  ./launch.sh >> lib/condorSubmitEdit.htc #####
 echo arguments                          = ${CMDLINEARG} >> lib/condorSubmitEdit.htc
 echo transfer_input_files = ${INPUTSU}, launch.sh >> lib/condorSubmitEdit.htc
@@ -99,5 +117,7 @@ jobid=`echo $jobid | sed -e 's/\.//'`
 
 #echo going to monitor job $jobid
 condor_tail -f $jobid
+
+debug
 
 exit 0
