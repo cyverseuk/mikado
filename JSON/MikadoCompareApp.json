@@ -11,7 +11,7 @@
   "executionSystem": "cyverseUK-Batch2",
   "executionType": "CLI",
   "parallelism": "SERIAL",
-  "templatePath": "compare_wrapper-1.0.0b10.sh",
+  "templatePath": "compare_wrapper-1.0.0.sh",
   "testPath": "test.sh",
   "tags": [ "CyverseUK" ],
   "ontology": [ "http://edamontology.org/operation_0362",
