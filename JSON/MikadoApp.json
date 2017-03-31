@@ -87,7 +87,7 @@
           "required": false
         },
         "details": {
-          "label": "blast databasefor deriving homology informations"
+          "label": "blast database for deriving homology informations"
         }
       },
       {
