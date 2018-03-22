@@ -126,7 +126,7 @@ echo input files are "${INPUTSU}"
 chmod +x launch.sh
 
 echo  universe                = docker >> lib/condorSubmitEdit.htc
-echo docker_image            =  cyverseuk/mikado:v1.0.1 >> lib/condorSubmitEdit.htc ######
+echo docker_image            =  cyverseuk/mikado:v1.1.0 >> lib/condorSubmitEdit.htc ######
 echo executable               =  ./launch.sh >> lib/condorSubmitEdit.htc #####
 echo arguments                          = ${CMDLINEARG} >> lib/condorSubmitEdit.htc
 echo transfer_input_files = ${INPUTSU}, launch.sh >> lib/condorSubmitEdit.htc
