@@ -11,8 +11,7 @@ USER root
 
 RUN     mkdir /data/ && cd /data && mkdir blastdatabases && \
         apt-get -y update && apt-get install -yy language-pack-en-base python3 python3-dev python3-pip cython3 ncbi-blast+ transdecoder snakemake git gridengine-drmaa-dev && \
-        pip3 install -U pip && \
-        pip3 install mikado==1.1
+        pip3 install mikado==1.2
 
 WORKDIR /data/
 
